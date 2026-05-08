@@ -1,0 +1,20 @@
+{
+  "priority": 10,
+  "request": {
+    "method": "POST",
+    "url": "/fraud-check/payments"
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"checkId\": \"{{randomValue type='UUID'}}\", \"result\": \"PASS\"}",
+    "transformers": ["response-template"],
+    "delayDistribution": {
+      "type": "uniform",
+      "lower": 500,
+      "upper": 3000
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

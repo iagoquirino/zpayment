@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: fraud-gateway
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+    producer:
+      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: ${configuration.kafka.schema-registry-url}
+
+configuration:
+  client:
+    fraud-checker:
+      url: ${FRAUD_CHECKER_URL:http://localhost:8888}
+  kafka:
+    schema-registry-url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+    application-prefix: fraud-gateway
+    topics:
+      payment-submission: payment_submission
+      fraud_result: fraud_gateway_result

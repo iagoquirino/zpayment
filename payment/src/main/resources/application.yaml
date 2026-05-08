@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: java-seed
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+    producer:
+      key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: ${configuration.kafka.schema-registry-url}
+  cloud:
+    function:
+      definition: paymentProcessTopology;paymentResultListener;
+    stream:
+      kafka:
+        streams:
+          binder:
+            application-id: "${configuration.kafka-prefix}.payment_process_topology"
+            brokers: "${spring.kafka.bootstrap-servers}"
+            configuration:
+              specific.avro.reader: true
+              default.key.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+              default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+              schema.registry.url: ${configuration.kafka.schema-registry-url}
+      bindings:
+        paymentProcessTopology-in-0:
+          destination: "${configuration.kafka.topics.payment-submission}"
+        paymentProcessTopology-in-1:
+          destination: "${configuration.kafka.topics.fraud_result}"
+        paymentProcessTopology-out-0:
+          destination: "${configuration.kafka.topics.payment-process-result}"
+        paymentResultListener-in-0:
+          destination: "${configuration.kafka.topics.payment-process-result}"
+          group: "${configuration.kafka.application-prefix}.payment-result-listener"
+
+configuration:
+  kafka:
+    schema-registry-url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
+    application-prefix: payment
+    topics:
+      payment-submission: payment_submission
+      fraud_result: fraud_gateway_result
+      payment-process-result: payment_process_result

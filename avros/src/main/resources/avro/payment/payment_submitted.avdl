@@ -1,0 +1,18 @@
+@namespace("com.java.payment.events")
+protocol PaymentSubmission {
+	record PaymentKey {
+		uuid paymentId;
+	}
+
+	record PaymentEvent {
+		uuid paymentId;
+		uuid accountId;
+		Money amount;
+		timestamp_ms createdAt;
+	}
+
+	record Money {
+		int value;
+		string currency;
+	}
+}

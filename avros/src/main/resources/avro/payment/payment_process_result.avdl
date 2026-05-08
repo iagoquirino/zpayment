@@ -1,0 +1,19 @@
+@namespace("com.java.payment.events")
+protocol PaymentProcessResult {
+	record PaymentProcessResultKey {
+		uuid paymentId;
+	}
+
+	record PaymentProcessResultEvent {
+		uuid paymentId;
+		PaymentProcessResultEnum processResult;
+		timestamp_ms createdAt;
+	}
+
+	enum PaymentProcessResultEnum {
+		UNDER_REVIEW,
+		APPROVED,
+		REJECTED,
+		UNKNOWN
+	} = UNKNOWN; //TODO avoids breaking change issues in case evolves and new options are introduced/decomissioned
+}

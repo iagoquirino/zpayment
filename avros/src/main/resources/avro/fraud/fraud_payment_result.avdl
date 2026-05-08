@@ -1,0 +1,20 @@
+@namespace("com.java.fraud.events")
+protocol FraudGateway {
+	record FraudPaymentKey {
+		uuid fraudId;
+		uuid paymentId;
+	}
+
+	record FraudPaymentEvent {
+		uuid fraudId;
+		uuid paymentId;
+		FraudPaymentResultEnum result;
+		timestamp_ms createdAt;
+	}
+
+	enum FraudPaymentResultEnum {
+		PASS,
+		REJECT,
+		UNKNOWN
+	} = UNKNOWN; //TODO avoids breaking change issues in case evolves and new options are introduced/decomissioned
+}

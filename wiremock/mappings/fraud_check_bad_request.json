@@ -1,0 +1,24 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "POST",
+    "url": "/fraud-check/payments",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.[?(@.amount == 899)]"
+      }
+    ]
+  },
+  "response": {
+    "status": 400,
+    "body": "{\"error\": \"Bad Request\", \"message\": \"Invalid amount for fraud check\"}",
+    "delayDistribution": {
+      "type": "uniform",
+      "lower": 50,
+      "upper": 100
+    },
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
