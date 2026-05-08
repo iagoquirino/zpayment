@@ -1,0 +1,12 @@
+@namespace("com.java.seed.user.events")
+protocol UserEvents {
+	record UserEventKey {
+		uuid userId;
+	}
+
+	record UserEvent {
+		uuid userId;
+		string name;
+		timestamp_ms createdAt;
+	}
+}

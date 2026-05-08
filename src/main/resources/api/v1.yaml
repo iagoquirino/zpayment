@@ -1,0 +1,114 @@
+openapi: 3.0.3
+info:
+  title: Java Seed API
+  version: 1.0.0
+  description: Seed project for future projects with Kafka Streams and Spring Boot.
+tags:
+  - name: users
+    description: Operations related to users
+  - name: orders
+    description: Operations related to orders
+  - name: user-orders
+    description: Operations related to joined user orders
+paths:
+  /v1/users:
+    post:
+      tags:
+        - users
+      summary: Create a user and publish event
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '202':
+          description: User event accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /v1/orders:
+    post:
+      tags:
+        - orders
+      summary: Create an order and publish event
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+      responses:
+        '202':
+          description: Order event accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+  /v1/user-orders:
+    get:
+      tags:
+        - user-orders
+      summary: List persisted user orders
+      operationId: listUserOrders
+      responses:
+        '200':
+          description: List of user orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserOrderResponse'
+components:
+  schemas:
+    UserRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: John Doe
+    UserResponse:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        result:
+          type: string
+          enum: [SUCCESS, FAILURE]
+    OrderRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+          format: uuid
+    OrderResponse:
+      type: object
+      properties:
+        orderId:
+          type: string
+          format: uuid
+        result:
+          type: string
+          enum: [SUCCESS, FAILURE]
+    UserOrderResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+          format: uuid
