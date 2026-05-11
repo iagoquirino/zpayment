@@ -34,7 +34,11 @@ class PaymentsRepositoryIT extends IntegrationTest {
         // then
         assertThat(payments)
                 .usingRecursiveComparison()
+                .ignoringFields("createdAt", "updatedAt")
                 .isEqualTo(persistedEntity);
+
+        assertThat(persistedEntity.getCreatedAt()).isNotNull();
+        assertThat(persistedEntity.getUpdatedAt()).isNotNull();
     }
 
     @Test
@@ -49,7 +53,11 @@ class PaymentsRepositoryIT extends IntegrationTest {
         // then
         assertThat(payments)
                 .usingRecursiveComparison()
+                .ignoringFields("createdAt", "updatedAt")
                 .isEqualTo(persistedEntity);
+
+        assertThat(persistedEntity.getCreatedAt()).isNotNull();
+        assertThat(persistedEntity.getUpdatedAt()).isNotNull();
     }
 
     @Test
