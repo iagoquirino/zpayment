@@ -1,12 +1,16 @@
 package com.java.payment;
 
+import com.java.payment.entity.PaymentsRepository;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.client.RestTestClient;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -23,6 +27,7 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
 
 @ActiveProfiles("test")
 @Testcontainers
+@AutoConfigureRestTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class IntegrationTest {
 
@@ -59,9 +64,15 @@ public abstract class IntegrationTest {
         System.setProperty("SCHEMA_REGISTRY_URL", "http://" + schemaRegistry.getHost() + ":" + schemaRegistry.getMappedPort(8081));
     }
 
+    @Autowired
+    public PaymentsRepository paymentsRepository;
+
+    @Autowired
+    protected RestTestClient restTestClient;
+
     @BeforeEach
     public void setup() {
-        // TODO do something in the near future
+        paymentsRepository.deleteAll();
     }
 
     @DynamicPropertySource

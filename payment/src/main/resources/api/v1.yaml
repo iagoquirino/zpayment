@@ -29,14 +29,8 @@ paths:
             schema:
               $ref: '#/components/schemas/PaymentRequest'
       responses:
-        '201':
+        '204':
           description: Payment processed successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaymentResponse'
-        '200':
-          description: Existing payment returned due to idempotency
           content:
             application/json:
               schema:
@@ -87,14 +81,10 @@ components:
       type: object
       required:
         - account_id
-        - beneficiary
         - currency
         - amount
       properties:
         account_id:
-          type: string
-          format: uuid
-        beneficiary:
           type: string
           format: uuid
         currency:
@@ -116,10 +106,7 @@ components:
     CurrencyEnum:
       type: string
       enum:
-        - GBP
         - USD
-        - EUR
-        - BRL
 
     PaymentStateEnum:
       type: string

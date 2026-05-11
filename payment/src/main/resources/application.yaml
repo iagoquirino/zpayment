@@ -15,6 +15,7 @@ spring:
   kafka:
     bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
     producer:
+      transaction-id-prefix: ktx-
       key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       properties:

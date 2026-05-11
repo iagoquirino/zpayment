@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Bean;
 
 @ConfigurationPropertiesScan
 @SpringBootApplication
-public class Application {
+public class PaymentApplication {
 
 	static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(PaymentApplication.class, args);
 	}
 
     @Bean

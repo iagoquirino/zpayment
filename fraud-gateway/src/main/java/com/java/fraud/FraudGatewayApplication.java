@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @ConfigurationPropertiesScan
 @SpringBootApplication
-public class Application {
+public class FraudGatewayApplication {
 
 	static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+		SpringApplication.run(FraudGatewayApplication.class, args);
 	}
 
 }
