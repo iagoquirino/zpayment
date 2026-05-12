@@ -17,6 +17,8 @@ How does it work:
 - If fraud is detected, payment is rejected.
 - If fraud is not detected, payment is approved.
 
+*Idempotency key is necessary to ensure the payment won't be processed multiple times.*
+
 The service is implemented using Spring Boot and Apache Kafka for message-driven architecture. It consumes payment submission events from Kafka topic and sends them to the fraud gateway for fraud detection. The result is then processed and stored in a database.
 
 States:
