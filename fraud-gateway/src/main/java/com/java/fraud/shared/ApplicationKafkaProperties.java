@@ -5,4 +5,4 @@ import java.util.Map;
 
 
 @ConfigurationProperties(prefix = "configuration.kafka")
-public record KafkaProperties(Map<String, String> topics) { }
+public record ApplicationKafkaProperties(Map<String, String> topics) { }

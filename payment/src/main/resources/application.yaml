@@ -1,3 +1,7 @@
+server:
+  port: 8080
+  shutdown: GRACEFUL
+
 spring:
   application:
     name: java-seed
@@ -51,5 +55,5 @@ configuration:
     application-prefix: payment
     topics:
       payment-submission: payment_submission
-      fraud_result: fraud_gateway_result
+      fraud-result: fraud_gateway_result
       payment-process-result: payment_process_result

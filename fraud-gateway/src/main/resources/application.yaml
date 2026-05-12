@@ -1,21 +1,35 @@
+server:
+  port: 8082
+  shutdown: GRACEFUL
+
 spring:
   application:
     name: fraud-gateway
   kafka:
     bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+    consumer:
+      group-id: ${configuration.kafka.groupd-id-prefix}-consumer
+      key-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        schema.registry.url: ${configuration.kafka.schema-registry-url}
+        specific.avro.reader: true
     producer:
       key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
       properties:
         schema.registry.url: ${configuration.kafka.schema-registry-url}
 
+client:
+  fraud-checker:
+    url: http://localhost:8888
+    connect-timeout-in-ms: 10000
+    read-timeout-in-ms: 10000
+
 configuration:
-  client:
-    fraud-checker:
-      url: ${FRAUD_CHECKER_URL:http://localhost:8888}
   kafka:
     schema-registry-url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
-    application-prefix: fraud-gateway
+    groupd-id-prefix: fraud-gateway
     topics:
       payment-submission: payment_submission
-      fraud_result: fraud_gateway_result
+      fraud-result: fraud_gateway_result

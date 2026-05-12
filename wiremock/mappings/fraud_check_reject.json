@@ -15,8 +15,8 @@
     "transformers": ["response-template"],
     "delayDistribution": {
       "type": "uniform",
-      "lower": 500,
-      "upper": 3000
+      "lower": 1000,
+      "upper": 5000
     },
     "headers": {
       "Content-Type": "application/json"
