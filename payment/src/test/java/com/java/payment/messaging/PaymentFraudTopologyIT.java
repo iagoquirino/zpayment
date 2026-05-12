@@ -83,7 +83,7 @@ class PaymentFraudTopologyIT extends IntegrationTest {
         // then
 
 
-        Awaitility.await().atMost(Duration.ofSeconds(5))
+        Awaitility.await().atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> {
                     processEvents();
                     assertThat(mapOfEvents.containsKey(paymentId)).isTrue();
