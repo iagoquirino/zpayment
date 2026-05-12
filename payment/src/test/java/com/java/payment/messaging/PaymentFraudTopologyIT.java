@@ -75,13 +75,14 @@ class PaymentFraudTopologyIT extends IntegrationTest {
         String paymentTopic = kafkaProperties.topics().get("payment-submission");
         String fraudTopic = kafkaProperties.topics().get("fraud-result");
 
-
         // when
         kafkaTemplate.executeInTransaction(ko -> ko.send(paymentTopic, paymentKey, paymentEvent));
         kafkaTemplate.executeInTransaction(ko -> ko.send(fraudTopic, fraudKey, fraudEvent));
 
         // then
-        Awaitility.await().atMost(Duration.ofSeconds(10))
+        Awaitility.await()
+                .pollInterval(Duration.ofMillis(500))
+                .atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> {
                     processEvents();
                     assertThat(mapOfEvents.containsKey(paymentId)).isTrue();
