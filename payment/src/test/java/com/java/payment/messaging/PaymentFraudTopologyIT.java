@@ -34,12 +34,13 @@ class PaymentFraudTopologyIT extends IntegrationTest {
 
     private final Map<UUID, PaymentProcessResultEvent> mapOfEvents = new ConcurrentHashMap<>();
 
-    private KafkaConsumer<PaymentProcessResultKey, PaymentProcessResultEvent> kafkaConsumer = kafkaConsumer();
+    private KafkaConsumer<PaymentProcessResultKey, PaymentProcessResultEvent> kafkaConsumer;
 
     @BeforeEach
     public void setup() {
         super.setup();
         String resultTopic = kafkaProperties.topics().get("payment-process-result");
+        kafkaConsumer = kafkaConsumer();
         kafkaConsumer.subscribe(Pattern.compile(resultTopic));
     }
 
@@ -80,10 +81,11 @@ class PaymentFraudTopologyIT extends IntegrationTest {
         kafkaTemplate.executeInTransaction(ko -> ko.send(fraudTopic, fraudKey, fraudEvent));
 
         // then
-        Awaitility.await().atMost(Duration.ofSeconds(10))
+        kafkaConsumer.poll(Duration.ofSeconds(5))
+                .forEach(this::processEvent);
+
+        Awaitility.await().atMost(Duration.ofSeconds(5))
                 .untilAsserted(() -> {
-                    kafkaConsumer.poll(Duration.ofMillis(100))
-                            .forEach(this::processEvent);
                     assertThat(mapOfEvents.containsKey(paymentId)).isTrue();
                 });
     }
