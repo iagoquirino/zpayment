@@ -81,8 +81,6 @@ class PaymentFraudTopologyIT extends IntegrationTest {
         kafkaTemplate.executeInTransaction(ko -> ko.send(fraudTopic, fraudKey, fraudEvent));
 
         // then
-
-
         Awaitility.await().atMost(Duration.ofSeconds(10))
                 .untilAsserted(() -> {
                     processEvents();
