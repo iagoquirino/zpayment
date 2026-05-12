@@ -8,6 +8,10 @@ Java -> 25
 SB -> 4.x
 Jackson -> 3.x
 
+# Arch view
+
+![archview.png](.specs/archview.png)
+
 ## Payment Module
 
 Consider that an microservice that will manage payment processing and state according with the fraud-check performed agains a "third-party" via `fraud-gateway` module.
