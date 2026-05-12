@@ -1,2 +1,3 @@
 configuration:
-  kafka-prefix: ${random.uuid}
+  kafka:
+    group-id-prefix: ${random.uuid}

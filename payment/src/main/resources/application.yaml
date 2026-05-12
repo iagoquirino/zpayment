@@ -32,7 +32,7 @@ spring:
         streams:
           binder:
             application-id: "${configuration.kafka.application-prefix}.payment_process_topology"
-            brokers: "${KAFKA_BROKERS:localhost:29092}"
+            brokers: ${spring.kafka.bootstrap-servers}
             configuration:
               commit.interval.ms: 0
               specific.avro.reader: true
