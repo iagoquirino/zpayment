@@ -3,6 +3,7 @@ package com.java.payment.service;
 import com.java.payment.entity.Payments;
 import com.java.payment.entity.PaymentsRepository;
 import com.java.payment.entity.enums.PaymentState;
+import com.java.payment.events.PaymentProcessResultEvent;
 import com.java.payment.messaging.PaymentsProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.java.payment.TestUtils.givenPayments;
+import static com.java.payment.TestUtils.*;
+import static com.java.payment.entity.enums.PaymentState.APPROVED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -105,5 +107,35 @@ class PaymentsServiceTest {
 
         then(paymentsRepository).should(never()).save(any());
         then(paymentsProducer).should(never()).publish(any());
+    }
+
+    @Test
+    void processPaymentResult_whenPaymentDoesNotExist() {
+        // given
+        PaymentProcessResultEvent event = givenPaymentProcessResultEvent();
+
+        // when
+        testObject.processResult(event);
+
+        // then
+        then(paymentsRepository).should(never()).save(any());
+    }
+
+    @Test
+    void processPaymentResult_whenPaymentExists() {
+        // given
+        PaymentProcessResultEvent event = givenPaymentProcessResultEvent();
+
+        Payments value = givenPersistedPayments();
+        given(paymentsRepository.findById(event.getPaymentId())).willReturn(Optional.of(value));
+
+        // when
+        testObject.processResult(event);
+
+        // then
+        then(paymentsRepository).should().save(paymentsCaptor.capture());
+
+        Payments payment = paymentsCaptor.getValue();
+        assertThat(payment.getState()).isEqualTo(APPROVED);
     }
 }

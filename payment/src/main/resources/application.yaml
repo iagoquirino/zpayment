@@ -26,7 +26,7 @@ spring:
         schema.registry.url: ${configuration.kafka.schema-registry-url}
   cloud:
     function:
-      definition: paymentProcessTopology;paymentResultListener;
+      definition: paymentFraudTopologyV1;paymentProcessResultListenerV1;
     stream:
       kafka:
         streams:
@@ -34,18 +34,26 @@ spring:
             application-id: "${configuration.kafka-prefix}.payment_process_topology"
             brokers: "${spring.kafka.bootstrap-servers}"
             configuration:
+              commit.interval.ms: 0
               specific.avro.reader: true
               default.key.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
               default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
               schema.registry.url: ${configuration.kafka.schema-registry-url}
+        bindings:
+          paymentProcessResultListenerV1-in-0:
+            consumer:
+              configuration:
+                value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+                specific.avro.reader: true
+                schema.registry.url: ${configuration.kafka.schema-registry-url}
       bindings:
-        paymentProcessTopology-in-0:
+        paymentFraudTopologyV1-in-0:
           destination: "${configuration.kafka.topics.payment-submission}"
-        paymentProcessTopology-in-1:
-          destination: "${configuration.kafka.topics.fraud_result}"
-        paymentProcessTopology-out-0:
+        paymentFraudTopologyV1-in-1:
+          destination: "${configuration.kafka.topics.fraud-result}"
+        paymentFraudTopologyV1-out-0:
           destination: "${configuration.kafka.topics.payment-process-result}"
-        paymentResultListener-in-0:
+        paymentProcessResultListenerV1-in-0:
           destination: "${configuration.kafka.topics.payment-process-result}"
           group: "${configuration.kafka.application-prefix}.payment-result-listener"
 

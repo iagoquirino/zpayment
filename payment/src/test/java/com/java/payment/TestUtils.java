@@ -1,5 +1,7 @@
 package com.java.payment;
 
+import com.java.fraud.events.FraudPaymentEvent;
+import com.java.fraud.events.FraudPaymentResultEnum;
 import com.java.payment.api.model.CurrencyEnum;
 import com.java.payment.api.model.PaymentRequest;
 import com.java.payment.entity.Payments;
@@ -7,8 +9,11 @@ import com.java.payment.entity.enums.Currency;
 import com.java.payment.entity.enums.PaymentState;
 import com.java.payment.events.Money;
 import com.java.payment.events.PaymentEvent;
+import com.java.payment.events.PaymentProcessResultEnum;
+import com.java.payment.events.PaymentProcessResultEvent;
 import lombok.experimental.UtilityClass;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @UtilityClass
@@ -53,4 +58,34 @@ public class TestUtils {
                 .accountId(UUID.randomUUID())
                 .build();
     }
+
+    public static PaymentProcessResultEvent givenPaymentProcessResultEvent() {
+        return PaymentProcessResultEvent.newBuilder()
+                .setPaymentId(UUID.randomUUID())
+                .setProcessResult(PaymentProcessResultEnum.APPROVED)
+                .setCreatedAt(Instant.now())
+                .build();
+    }
+
+    public static PaymentEvent givenPaymentEvent() {
+        return PaymentEvent.newBuilder()
+                .setPaymentId(UUID.randomUUID())
+                .setAccountId(UUID.randomUUID())
+                .setAmount(Money.newBuilder()
+                        .setValue(9000)
+                        .setCurrency(Currency.USD.name())
+                        .build())
+                .setCreatedAt(Instant.now())
+                .build();
+    }
+
+    public static FraudPaymentEvent givenFraudPaymentEvent() {
+        return FraudPaymentEvent.newBuilder()
+                .setFraudId(UUID.randomUUID())
+                .setPaymentId(UUID.randomUUID())
+                .setResult(FraudPaymentResultEnum.PASS)
+                .setCreatedAt(Instant.now())
+                .build();
+    }
+
 }
