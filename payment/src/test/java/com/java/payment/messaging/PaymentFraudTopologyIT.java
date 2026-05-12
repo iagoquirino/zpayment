@@ -5,6 +5,7 @@ import com.java.fraud.events.FraudPaymentKey;
 import com.java.fraud.events.FraudPaymentResultEnum;
 import com.java.payment.IntegrationTest;
 import com.java.payment.events.*;
+import com.java.payment.service.PaymentsService;
 import com.java.payment.shared.KafkaProperties;
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -32,16 +34,19 @@ class PaymentFraudTopologyIT extends IntegrationTest {
     @Autowired
     private KafkaProperties kafkaProperties;
 
+    @MockitoBean
+    protected PaymentsService paymentsService;
+
     private final Map<UUID, PaymentProcessResultEvent> mapOfEvents = new ConcurrentHashMap<>();
 
-    private KafkaConsumer<PaymentProcessResultKey, PaymentProcessResultEvent> kafkaConsumer;
+    private KafkaConsumer<PaymentProcessResultKey, PaymentProcessResultEvent> consumer;
 
     @BeforeEach
     public void setup() {
         super.setup();
         String resultTopic = kafkaProperties.topics().get("payment-process-result");
-        kafkaConsumer = kafkaConsumer();
-        kafkaConsumer.subscribe(Pattern.compile(resultTopic));
+        consumer = kafkaConsumer();
+        consumer.subscribe(Pattern.compile(resultTopic));
     }
 
     @Test
@@ -90,7 +95,7 @@ class PaymentFraudTopologyIT extends IntegrationTest {
     }
 
     private void processEvents() {
-        kafkaConsumer.poll(Duration.ofSeconds(1))
+        consumer.poll(Duration.ofSeconds(1))
                 .forEach(this::processEvent);
     }
 
