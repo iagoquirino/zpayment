@@ -81,13 +81,18 @@ class PaymentFraudTopologyIT extends IntegrationTest {
         kafkaTemplate.executeInTransaction(ko -> ko.send(fraudTopic, fraudKey, fraudEvent));
 
         // then
-        kafkaConsumer.poll(Duration.ofSeconds(5))
-                .forEach(this::processEvent);
+
 
         Awaitility.await().atMost(Duration.ofSeconds(5))
                 .untilAsserted(() -> {
+                    processEvents();
                     assertThat(mapOfEvents.containsKey(paymentId)).isTrue();
                 });
+    }
+
+    private void processEvents() {
+        kafkaConsumer.poll(Duration.ofSeconds(1))
+                .forEach(this::processEvent);
     }
 
     private void processEvent(ConsumerRecord<PaymentProcessResultKey, PaymentProcessResultEvent> record) {

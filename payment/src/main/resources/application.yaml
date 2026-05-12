@@ -39,6 +39,7 @@ spring:
               default.key.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
               default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
               schema.registry.url: ${configuration.kafka.schema-registry-url}
+              state.dir: ${configuration.kafka.state-dir}
         bindings:
           paymentProcessResultListenerV1-in-0:
             consumer:
@@ -59,6 +60,7 @@ spring:
 
 configuration:
   kafka:
+    state-dir: /tmp/kafka-streams/payment
     schema-registry-url: ${SCHEMA_REGISTRY_URL:http://localhost:8081}
     application-prefix: payment
     topics:

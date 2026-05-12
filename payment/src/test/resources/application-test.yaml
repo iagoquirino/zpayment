@@ -1,3 +1,4 @@
 configuration:
   kafka:
+    state-dir: /tmp/kafka-streams-it/payment-${random.uuid}
     application-prefix: ${random.uuid}
