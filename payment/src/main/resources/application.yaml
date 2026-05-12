@@ -4,11 +4,11 @@ server:
 
 spring:
   application:
-    name: java-seed
+    name: zpayment
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:postgres}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/vpayment}
+    username: ${DATABASE_USERNAME:vpayment}
+    password: ${DATABASE_PASSWORD:vpayment}
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
@@ -17,7 +17,7 @@ spring:
   flyway:
     enabled: true
   kafka:
-    bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:29092}
     producer:
       transaction-id-prefix: ktx-
       key-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
@@ -31,8 +31,8 @@ spring:
       kafka:
         streams:
           binder:
-            application-id: "${configuration.kafka-prefix}.payment_process_topology"
-            brokers: "${spring.kafka.bootstrap-servers}"
+            application-id: "${configuration.kafka.application-prefix}.payment_process_topology"
+            brokers: "${KAFKA_BROKERS:localhost:29092}"
             configuration:
               commit.interval.ms: 0
               specific.avro.reader: true

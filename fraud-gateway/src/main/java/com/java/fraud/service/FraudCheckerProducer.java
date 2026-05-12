@@ -5,12 +5,14 @@ import com.java.fraud.events.FraudPaymentKey;
 import com.java.fraud.events.FraudPaymentResultEnum;
 import com.java.fraud.shared.ApplicationKafkaProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FraudCheckerProducer {
@@ -37,5 +39,6 @@ public class FraudCheckerProducer {
                 .build();
 
         kafkaTemplate.send(topic, key, event);
+        log.info("Published fraud check result for paymentId: {}", event.getPaymentId());
     }
 }

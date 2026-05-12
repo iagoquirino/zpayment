@@ -19,7 +19,7 @@ public class FraudCheckService {
     private final FraudCheckerProducer fraudCheckerProducer;
 
     public void checkFraud(PaymentEvent event) {
-        log.info("Processing fraud check for payment ID: {}", event.getPaymentId());
+        log.info("Processing fraud check for paymentId: {}", event.getPaymentId());
         FraudCheckerResponse response = fraudCheckerClient.checkFraud(event);
         FraudChecker persisted = FraudChecker.builder()
                 .id(UUID.randomUUID())

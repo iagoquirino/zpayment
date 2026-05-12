@@ -58,7 +58,7 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(PaymentNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePaymentNotFoundException(PaymentNotFoundException ex) {
-        log.warn("Insufficient balance funds", ex);
+        log.warn("Payment not found", ex);
         return ResponseEntity
                 .status(NOT_FOUND)
                 .body(buildErrorResponse(ex.getMessage()));
