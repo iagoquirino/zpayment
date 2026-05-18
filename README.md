@@ -25,6 +25,8 @@ How does it work:
 
 The service is implemented using Spring Boot and Apache Kafka for message-driven architecture. It consumes payment submission events from Kafka topic and sends them to the fraud gateway for fraud detection. The result is then processed and stored in a database.
 
+Contract First approach can be seen here: https://github.com/iagoquirino/zpayment/blob/main/payment/src/main/resources/api/v1.yaml
+
 States:
  - PENDING -> Payment accepted and submitted
  - UNDER_REVIEW -> Payment is under review by fraud gateway
